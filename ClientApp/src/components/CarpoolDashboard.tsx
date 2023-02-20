@@ -13,7 +13,7 @@ export default function CarpoolDashboard() {
     const [schoolClasses, setSchoolclasses] = useState<Schoolclass[]>([]);
     const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
     const [disabledStudents, setDisabledStudents] = useState<Student[]>([]);
-
+    const [validRegistrationNumber, setvalidRegistrationNumber] = useState<boolean>(false);
 
     useEffect(() => {
         axios.get<Schoolclass[]>('http://localhost:5002/classes/GetClasses')
@@ -22,18 +22,23 @@ export default function CarpoolDashboard() {
             })
     }, [])
 
+    // function disableAllstudents(){
+    //     var array : Student[] = [];
+    //     schoolClasses.forEach(classObj => {
+    //         array.push(...classObj.students);
+    //     });
+    //     setDisabledStudents(array);
+    // }
+
     return (
         <>
             {
                 schoolClasses.map(classobj => (
-                    <Segment clearing>
-                        <Header>
-                            Class {classobj.className}
-                        </Header>
-                        <ClassItem schoolclass={classobj} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} key={classobj.id} disabledStudents={disabledStudents} />
+                    <Segment key={classobj.id} clearing disabled={!validRegistrationNumber}>
+                        <ClassItem validRegistrationNumber={validRegistrationNumber} schoolclass={classobj} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} disabledStudents={disabledStudents} />
                     </Segment>
                 ))}
-            <CarpoolLane setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} setDisabledStudents={setDisabledStudents} />
+            <CarpoolLane validRegistrationNumber={validRegistrationNumber} setvalidRegistrationNumber={setvalidRegistrationNumber} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} setDisabledStudents={setDisabledStudents} disabledStudents={disabledStudents} />
         </>
     )
 }
