@@ -21,14 +21,14 @@ namespace CarpoolPickup.Controllers
         public async Task<ActionResult<List<PickupCar>>> GetCars()
         {
             return await _context.PickupCars.AsNoTracking()
-                        .Include(c => c.Students).ToListAsync<PickupCar>();
+                        .Include(c => c.Students).OrderByDescending(c => c.CreatedAt).ToListAsync<PickupCar>();
         }
         [HttpPost]
         public async Task<ActionResult<PickupCar>> CreatePickupCar([FromBody] PickupCar carObj)
         {
             _context.PickupCars.Update(carObj);
             await _context.SaveChangesAsync();
-            var _list = await _context.PickupCars.AsNoTracking().Where(obj => obj.RegistrationNumber == carObj.RegistrationNumber).ToListAsync();
+            var _list = await _context.PickupCars.AsNoTracking().Where(obj => obj.RegistrationNumber == carObj.RegistrationNumber).Include(s => s.Students).ToListAsync();
             return _list.First();
         }
 
@@ -71,9 +71,25 @@ namespace CarpoolPickup.Controllers
             PickupCar? car = _context.PickupCars.Find(carObj.Id);
             if (car != null)
             {
-                _context.PickupCars.Remove(car);
+                _context.Remove(car);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<ActionResult<PickupCar>> MarkCarLeft([FromBody]PickupCar carObj){
+            PickupCar? car = _context.PickupCars.Include(s => s.Students).Where( car => car.Id == carObj.Id).First();
+            if (car != null)
+            {
+                car.HasLeft=true;
+                car.LeftAt = DateTime.Now;
+                _context.Update(car);
+                await _context.SaveChangesAsync();
+            }  
+            return car;
+        }
+        public async void ResetPickupCars(){
+            _context.RemoveRange(_context.PickupCars);
+             await _context.SaveChangesAsync();
         }
     }
 }

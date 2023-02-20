@@ -1,40 +1,19 @@
 import axios from "axios";
-import { Header, List, Segment } from "semantic-ui-react";
+import { useState } from "react";
+import { Header, Icon, IconGroup, List, Segment } from "semantic-ui-react";
 import { PickupCar } from "../app/models/PickupCar";
 import { Student } from "../app/models/Student";
 
 interface Prop {
     car: PickupCar,
-    setSelectedStudents:(selectedStudents:Student[])=> void,
-    setRegistrationNumber:(carRegistrationNumber:string)=> void
-    EditCar:(EditCar : boolean)=>void,
-    setpickupCarforEdit:(pickupCarforEdit : PickupCar) => void
-  //  handleSelectedCarForEdit: (CarForEdit : PickupCar) => void
+    handleCarDeletion: (car: PickupCar) => void,
+    handleCarEdit: (CarForEdit: PickupCar) => void,
+    handleCarLeft: (car: PickupCar)=> void,
+    setDisableCar:(isCarDisabled : boolean)=>void,
+    disableCar: boolean
 }
-export default function CarItem({ car,setSelectedStudents,setRegistrationNumber,EditCar,setpickupCarforEdit}: Prop) {
-
-    function handleSelectedCarForEdit(cartoEdit : PickupCar){
-        setRegistrationNumber(cartoEdit.registrationNumber);
-        EditCar(true);
-        setSelectedStudents(cartoEdit.students);
-        setpickupCarforEdit(cartoEdit);
-    }
-    function handleCancelSelectedCarForEdit(cartoEdit : PickupCar){
-        // cartoEdit.students.forEach(student => {
-        //     student.isSelected = true;
-        // });
-        // //setCarforEdit(cartoEdit);
-        // setRegistrationNumber(cartoEdit.registrationNumber);
-        // setSelectedStudents([]);
-
-    }
-    function handleSelectedCarDeletion(car : PickupCar){
-        axios.post<PickupCar>('http://localhost:5002/PickupCar/DeletePickupcar',car)
-        .then(response => {
-            console.log(response);
-        })
-    }
-
+export default function CarItem({ car, handleCarDeletion, handleCarEdit,handleCarLeft,disableCar }: Prop) {
+   
     return (
         <div className="card">
             <div className="content">
@@ -51,10 +30,13 @@ export default function CarItem({ car,setSelectedStudents,setRegistrationNumber,
                     }
                 </div>
             </div>
-            <div className="extra content">
-                <span className="right floated star">
-                    <i className="edit icon" onClick={()=> handleSelectedCarForEdit(car)} style={{cursor: "pointer"}}></i>
-                    <i className="trash icon" onClick={()=> handleSelectedCarDeletion(car)} style={{cursor: "pointer"}}></i>
+            <div className="extra content" style={{ display: disableCar ? "none" : "block" }}>
+                <span className="left floated">
+                    <button className="ui primary button" onClick={() => handleCarLeft(car)}>Mark Car Left</button>
+                </span>
+                <span className="right floated icons" style={{ padding: '0.5em' }}>
+                    <i typeof="button" className="edit alternate outline` icon" onClick={() => handleCarEdit(car)} style={{ cursor: "pointer", fontSize: "1.2em" }} ></i>
+                    <i typeof="button" className="trash alternate outline icon" onClick={() => handleCarDeletion(car)} style={{ cursor: "pointer", fontSize: "1.2em" }}></i>
                 </span>
             </div>
         </div>
