@@ -9,31 +9,47 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 //builder.Services.AddScoped<IClassRepository,ClassRepository>();
-builder.Services.AddDbContext<ApplicationDbContext>(opt => {
+builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+{
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddSwaggerGen();
+// builder.Services.AddCors(opt =>{
+//     opt.AddPolicy("CorsPolicy",policy=>{
+//         policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+//     });
+// });
 
-builder.Services.AddCors(opt =>{
-    opt.AddPolicy("CorsPolicy",policy=>{
-        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
-    });
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(policy =>
+               {
+                   policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build();
+               });
 });
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+
+if (app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+   app.UseSwagger();
+   app.UseSwaggerUI();
+}
+else
+{
+   app.UseDefaultFiles();
+   app.UseStaticFiles();
 }
 
-//app.UseHttpsRedirection();
-//app.UseStaticFiles();
-//app.UseRouting();
 
-app.UseCors("CorsPolicy");
-app.UseAuthorization();
+app.UseCors();
+app.UseRouting();
+
+
+// app.UseCors("CorsPolicy");
+// app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
@@ -44,16 +60,17 @@ app.MapControllerRoute(
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 
-try{
+try
+{
     var context = services.GetRequiredService<ApplicationDbContext>();
     await context.Database.MigrateAsync();
     await Seed.SeedClassData(context);
     await Seed.SeedPickupCarData(context);
 }
-catch(Exception ex)
+catch (Exception ex)
 {
     var _logger = services.GetRequiredService<ILogger<Program>>();
-    _logger.LogError("Exception " + ex); 
+    _logger.LogError("Exception " + ex);
 }
 
 
