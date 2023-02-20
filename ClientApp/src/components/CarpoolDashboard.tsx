@@ -9,14 +9,14 @@ import ClassItem from './ClassItem';
 
 
 export default function CarpoolDashboard() {
-
+    const baseURL: string | undefined = process.env.REACT_APP_BASE_URL;
     const [schoolClasses, setSchoolclasses] = useState<Schoolclass[]>([]);
     const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
     const [disabledStudents, setDisabledStudents] = useState<Student[]>([]);
     const [validRegistrationNumber, setvalidRegistrationNumber] = useState<boolean>(false);
 
     useEffect(() => {
-        axios.get<Schoolclass[]>('http://localhost:5002/classes/GetClasses')
+        axios.get<Schoolclass[]>(baseURL + 'classes/GetClasses')
             .then(response => {
                 setSchoolclasses(response.data);
             })

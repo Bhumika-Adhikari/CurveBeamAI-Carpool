@@ -15,7 +15,8 @@ interface Props {
 
 }
 export default function CarpoolLane({ setSelectedStudents, selectedStudents, setDisabledStudents,setvalidRegistrationNumber,validRegistrationNumber,disabledStudents }: Props) {
-
+    const baseURL: string | undefined = process.env.REACT_APP_BASE_URL;
+    
     const [pickupCars, setPickupCars] = useState<PickupCar[]>([]);
     const [carRegistrationNumber, setRegistrationNumber] = useState('');
     const [pickupcarForEdit, setpickupCarforEdit] = useState<PickupCar | undefined>();
@@ -27,7 +28,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
 
     useEffect(() => {
-        axios.get<PickupCar[]>('http://localhost:5002/PickupCar/GetCars')
+        axios.get<PickupCar[]>(baseURL + 'PickupCar/GetCars')
             .then(response => {
                 setPickupCars(response.data);
                 AddLeftCarDisabledStudents(response.data);
@@ -58,7 +59,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
         if (isEditCarEnabled && pickupcarForEdit != undefined) {
             car.id = pickupcarForEdit.id;
             var index: number = pickupCars.findIndex(x => x.id === pickupcarForEdit.id);
-            axios.post<PickupCar>('http://localhost:5002/PickupCar/UpdatePickupCar', car)
+            axios.post<PickupCar>(baseURL + 'PickupCar/UpdatePickupCar', car)
                 .then(response => {
                     var array = [...pickupCars];
                     array.splice(index, 1);
@@ -69,7 +70,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                 })
         }
         else {
-            axios.post<PickupCar>('http://localhost:5002/PickupCar/CreatePickupCar', car)
+            axios.post<PickupCar>(baseURL + 'PickupCar/CreatePickupCar', car)
                 .then(response => {
                     setPickupCars([response.data, ...pickupCars]);
                     resetCarpoolDashboardValues();
@@ -103,7 +104,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
     function handleCarDeletion(car: PickupCar) {
         var index = pickupCars.findIndex(c => c.id == car.id);
-        axios.post<PickupCar>('http://localhost:5002/PickupCar/DeletePickupcar', car)
+        axios.post<PickupCar>(baseURL + 'PickupCar/DeletePickupcar', car)
             .then(response => {
                 setPickupCars([...pickupCars.slice(0, index), ...pickupCars.slice(index + 1)]);
                 resetCarpoolDashboardValues();
@@ -135,7 +136,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
         }
         else{
-        axios.post<PickupCar>('http://localhost:5002/PickupCar/MarkCarLeft', car)
+        axios.post<PickupCar>(baseURL + 'PickupCar/MarkCarLeft', car)
             .then(response => {
                 var array = [...pickupCars]
                 array.splice(index, 1);
@@ -147,7 +148,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
     }
 
     function handleResetCarpool() {
-        axios.post<PickupCar>('http://localhost:5002/PickupCar/ResetPickupCars')
+        axios.post<PickupCar>(baseURL + 'PickupCar/ResetPickupCars')
             .then(response => {
                 setPickupCars([]);
                 resetCarpoolDashboardValues();
