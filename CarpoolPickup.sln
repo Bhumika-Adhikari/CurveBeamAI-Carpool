@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1704.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarpoolPickup", "CarpoolPickup.csproj", "{22D1DF18-6EF8-47FD-B7C7-A37EDCD4DC09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22D1DF18-6EF8-47FD-B7C7-A37EDCD4DC09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D1DF18-6EF8-47FD-B7C7-A37EDCD4DC09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D1DF18-6EF8-47FD-B7C7-A37EDCD4DC09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D1DF18-6EF8-47FD-B7C7-A37EDCD4DC09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {60A2CA2F-C29C-42D1-A5E6-346CEF1D8B90}
+	EndGlobalSection
+EndGlobal
