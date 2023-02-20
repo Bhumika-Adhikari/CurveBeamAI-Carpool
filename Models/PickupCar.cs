@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarpoolPickup.Models
@@ -11,6 +12,10 @@ namespace CarpoolPickup.Models
         public List<Student> Students { get; set; }
 
         public Boolean HasLeft { get; set; }
+
+        public DateTime LeftAt{get;set;}
+
+        public DateTime CreatedAt{get;set;} = DateTime.Now;
 
         // public PickupCar()
         // {
