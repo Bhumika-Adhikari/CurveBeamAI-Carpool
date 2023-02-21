@@ -12,11 +12,11 @@ interface Props {
     setvalidRegistrationNumber: (isvalidRegistrationNumber: boolean) => void
     validRegistrationNumber: boolean,
     disabledStudents: Array<Student>,
-    isEditCarEnabled:boolean,
-    setEditCar: (editcar : boolean) => void
+    isEditCarEnabled: boolean,
+    setEditCar: (editcar: boolean) => void
 
 }
-export default function CarpoolLane({ setSelectedStudents, selectedStudents, setDisabledStudents, setvalidRegistrationNumber, validRegistrationNumber,setEditCar,isEditCarEnabled,disabledStudents }: Props) {
+export default function CarpoolLane({ setSelectedStudents, selectedStudents, setDisabledStudents, setvalidRegistrationNumber, validRegistrationNumber, setEditCar, isEditCarEnabled, disabledStudents }: Props) {
     const baseURL: string | undefined = process.env.REACT_APP_BASE_URL;
 
     const [pickupCars, setPickupCars] = useState<PickupCar[]>([]);
@@ -54,8 +54,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
     function submitCar() {
 
-        if(carRegistrationNumber.length <= 0)
-        {
+        if (carRegistrationNumber.length <= 0) {
             setSomeErrorFlag(true);
             setError('Enter a valid registration number');
             return;
@@ -90,6 +89,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
         }
     }
     function handleInputchanges(event: ChangeEvent<HTMLInputElement>) {
+        setIsCarLetError(false);
         var value = event.target.value;
         setRegistrationNumber(event.target.value);
         if (value.length < 6) {
@@ -124,18 +124,21 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
             .then(response => {
                 setPickupCars([...pickupCars.slice(0, index), ...pickupCars.slice(index + 1)]);
                 resetCarpoolDashboardValues();
+                window.scrollTo(0, 0);
             })
 
     }
     function handleCarEdit(cartoEdit: PickupCar) {
         resetCarpoolDashboardValues();
+        updateSelectedStudents(cartoEdit.students);
         setvalidRegistrationNumber(true);
         setRegistrationNumber(cartoEdit.registrationNumber);
         setEditCar(true);
-        setSelectedStudents(cartoEdit.students);
+        //setSelectedStudents(cartoEdit.students);
         setpickupCarforEdit(cartoEdit);
         setError('');
         setIsCarLetError(false);
+        window.scrollTo(0, 0);
     }
 
     function handleCarLeft(car: PickupCar) {
@@ -153,6 +156,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
         }
         else {
+            setIsCarLetError(false);
             axios.post<PickupCar>(baseURL + 'PickupCar/MarkCarLeft', car)
                 .then(response => {
                     var array = [...pickupCars]
@@ -165,6 +169,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                     resetCarpoolDashboardValues();
                 })
         }
+        window.scrollTo(0, 0);
     }
 
 
@@ -177,14 +182,22 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                 setShowConfirmation(false);
             })
     }
-    function handleCarNext(index : number){
-            var array = [...pickupCars];
-            var car = array[index];
-            array.splice(index,1);
-            array.unshift(car);
-            setPickupCars(array);
+    function handleCarNext(index: number) {
+        var array = [...pickupCars];
+        var car = array[index];
+        array.splice(index, 1);
+        array.unshift(car);
+        setPickupCars(array);
     }
-
+    function updateSelectedStudents(students: Student[]) {
+        var arr: Array<Student> = [];
+        students.forEach(student => {
+            if (disabledStudents.findIndex(d => d.id == student.id) < 0) {
+                arr.push(student);
+            }
+        });
+        setSelectedStudents(arr);
+    }
     return (
         <Segment>
             <Segment className="ui" >
@@ -192,7 +205,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                     <Form.Input placeholder="Add New Car Registration number" value={carRegistrationNumber} onChange={handleInputchanges}></Form.Input>
                     <div className="error" id="title-error" role="alert" style={{ color: 'indianred', display: isSomeError ? '' : 'none' }}>{error}</div>
                     <Button disabled={(!validRegistrationNumber)} style={{ display: isEditCarEnabled ? "none" : "" }} className="ui basic primary button" type='submit' onClick={submitCar}>Add Car</Button>
-                    <Button  disabled={(!validRegistrationNumber)} style={{ display: !isEditCarEnabled ? "none" : "" }} className="ui basic primary button" type='submit' onClick={submitCar}>Edit Car</Button>
+                    <Button disabled={(!validRegistrationNumber)} style={{ display: !isEditCarEnabled ? "none" : "" }} className="ui basic primary button" type='submit' onClick={submitCar}>Edit Car</Button>
                     <Button style={{ display: !isEditCarEnabled ? "none" : "" }} className="ui basic negative right button" onClick={() => { resetCarpoolDashboardValues() }}>Cancel</Button>
                 </Form>
             </Segment>
@@ -200,8 +213,8 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                 <div style={{ overflow: 'auto' }} className="ui cards">
                     <div className="header attached" style={{ fontWeight: 700, fontSize: '1.28571429em', marginTop: '-0.21425em', lineHeight: '1.28571429em', padding: '1em 1em', width: '100%' }}>
                         Carpool Lane
-                        <span style={{display: pickupCars.length==0? '' : 'none', fontWeight:'normal' , fontSize:'12px', marginLeft:'10px'}}> (Please add cars to carpool) </span>
-                        <span className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none' }}>( Car cannot be marked left, Please remove student/s who has already left. )</span>
+                        <span style={{ display: pickupCars.length == 0 ? '' : 'none', fontWeight: 'normal', fontSize: '12px', marginLeft: '10px' }}> (Please add cars to carpool) </span>
+                        <span className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none', marginLeft: '10 px' }}> (Car cannot be marked left, Please remove student/s who has already left. )</span>
                         <i className="redo alternate icon right" onClick={() => setShowConfirmation(true)} style={{ color: 'rgba(0,0,0,.4)', float: 'right', cursor: 'pointer' }}></i>
                         <Confirm open={showConfirmation}
                             content='Are you sure you want to reset the carpool. This will remove all progress.'
@@ -212,7 +225,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                         </Confirm>
                     </div>
                     {
-                        pickupCars.map((carObj,carIndex) => (
+                        pickupCars.map((carObj, carIndex) => (
                             <CarItem handleCarNext={handleCarNext} key={carObj.id} index={carIndex} disableCar={carObj.hasLeft ? true : false} handleCarLeft={handleCarLeft} handleCarDeletion={handleCarDeletion} car={carObj} handleCarEdit={handleCarEdit} />
                         ))
                     }
