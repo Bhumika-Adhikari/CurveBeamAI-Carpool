@@ -11,10 +11,10 @@ interface Props {
     setSelectedStudents: (argument0: Student[]) => void
     disabledStudents: Student[],
     validRegistrationNumber: boolean,
-    isEditCarEnabled:boolean
+    isEditCarEnabled: boolean
 }
 
-export default function ClassItem({ schoolclass, selectedStudents, setSelectedStudents, disabledStudents, validRegistrationNumber,isEditCarEnabled }: Props) {
+export default function ClassItem({ schoolclass, selectedStudents, setSelectedStudents, disabledStudents, validRegistrationNumber, isEditCarEnabled }: Props) {
 
 
     function handleSelectedStudent(classid: number, studentid: number) {
@@ -32,22 +32,24 @@ export default function ClassItem({ schoolclass, selectedStudents, setSelectedSt
         }
     }
     function getdisabledProperty(disabledStudents: Student[], currentId: number) {
-        if(isEditCarEnabled && getcheckedProperty(selectedStudents,currentId))
-            return false;
         if (!validRegistrationNumber)
             return true;
         return disabledStudents.findIndex(student => student.id == currentId) >= 0 ? true : false;
     }
     function getcheckedProperty(selectedStudents: Student[], currentId: number) {
+
+        // if(disabledStudents.findIndex(student => student.id == currentId) >=0 && selectedStudents.findIndex(student => student.id == currentId) >= 0)
+        // {
+        //     return false;
+        // }
+
         // console.log(selectedStudents.findIndex(student => student.id == currentId) >= 0 ? true : false);
         return selectedStudents.findIndex(student => student.id == currentId) >= 0 ? true : false;
     }
-    function getStudentsLeft()
-    {
+    function getStudentsLeft() {
         var count = 0;
         disabledStudents.forEach(student => {
-            if(schoolclass.students.findIndex(s=> student.id == s.id) >=0)
-            {
+            if (schoolclass.students.findIndex(s => student.id == s.id) >= 0) {
                 ++count;
             }
         });
@@ -56,8 +58,8 @@ export default function ClassItem({ schoolclass, selectedStudents, setSelectedSt
     return (
         <>
             <Header>
-                <span style={{color: '#1f5f93'}}>Class {schoolclass.className} </span>
-                <span className="ui" style={{float:'right'}}>
+                <span style={{ color: '#1f5f93' }}>Class {schoolclass.className} </span>
+                <span className="ui" style={{ float: 'right' }}>
                     {getStudentsLeft()}/{schoolclass.students.length}
                 </span>
             </Header>
@@ -67,7 +69,7 @@ export default function ClassItem({ schoolclass, selectedStudents, setSelectedSt
                         <>
                             <input type="checkbox" disabled={getdisabledProperty(disabledStudents, studentobj.id)} checked={getcheckedProperty(selectedStudents, studentobj.id)} onChange={() => { }} style={{ marginRight: 10 }} onClick={() => handleSelectedStudent(schoolclass.id, studentobj.id)} value={studentobj.id}>
                             </input>
-                            <span style={{opacity: getdisabledProperty(disabledStudents, studentobj.id)? 0.45 : '', color: getdisabledProperty(disabledStudents, studentobj.id)? 'rgba(40, 40, 40, 0.3)': ''}}>{studentobj.studentName} </span>
+                            <span style={{ opacity: getdisabledProperty(disabledStudents, studentobj.id) ? 0.45 : '', color: getdisabledProperty(disabledStudents, studentobj.id) ? 'rgba(40, 40, 40, 0.3)' : '' }}>{studentobj.studentName} </span>
                         </>
                     </ListItem>
                 ))
