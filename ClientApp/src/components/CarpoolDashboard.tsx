@@ -22,14 +22,6 @@ export default function CarpoolDashboard() {
             })
     }, [])
 
-    // function disableAllstudents(){
-    //     var array : Student[] = [];
-    //     schoolClasses.forEach(classObj => {
-    //         array.push(...classObj.students);
-    //     });
-    //     setDisabledStudents(array);
-    // }
-
     return (
         <>
             {
