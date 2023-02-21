@@ -4,7 +4,6 @@ import { Button, Confirm, Form, Header, Segment } from "semantic-ui-react";
 import { PickupCar } from "../app/models/PickupCar";
 import { Student } from "../app/models/Student";
 import CarItem from "./CarItem";
-import Draggable, { DraggableCore } from "react-draggable";
 
 interface Props {
     setSelectedStudents: (selectedStudents: Student[]) => void,
