@@ -21,7 +21,7 @@ namespace CarpoolPickup.Controllers
         public async Task<ActionResult<List<PickupCar>>> GetCars()
         {
             return await _context.PickupCars.AsNoTracking()
-                        .Include(c => c.Students).OrderByDescending(c => c.CreatedAt).ToListAsync<PickupCar>();
+                        .Include(c => c.Students).OrderByDescending(c => c.CreatedAt).OrderBy(c=> c.HasLeft).ToListAsync<PickupCar>();
         }
         [HttpPost]
         public async Task<ActionResult<PickupCar>> CreatePickupCar([FromBody] PickupCar carObj)

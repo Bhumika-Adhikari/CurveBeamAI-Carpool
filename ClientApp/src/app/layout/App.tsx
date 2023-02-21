@@ -1,8 +1,8 @@
 import './styles.css';
 import { Container } from 'semantic-ui-react';
 import NavBar from './NavBar';
-import CarpoolDashboard from '../../features/CarpoolDashboard';
-import CarpoolLane from '../../features/CarpoolLane';
+import CarpoolDashboard from '../../components/CarpoolDashboard';
+import CarpoolLane from '../../components/CarpoolLane';
 
 function App() {
 
