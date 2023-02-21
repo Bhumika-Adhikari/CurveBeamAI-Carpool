@@ -21,7 +21,7 @@ namespace CarpoolPickup.Controllers
         public async Task<ActionResult<List<PickupCar>>> GetCars()
         {
             return await _context.PickupCars.AsNoTracking()
-                        .Include(c => c.Students).OrderByDescending(c => c.CreatedAt).OrderBy(c=> c.HasLeft).ToListAsync<PickupCar>();
+                        .Include(c => c.Students).OrderByDescending(c => c.CreatedAt).OrderBy(c => c.HasLeft).ToListAsync<PickupCar>();
         }
         [HttpPost]
         public async Task<ActionResult<PickupCar>> CreatePickupCar([FromBody] PickupCar carObj)
@@ -76,20 +76,24 @@ namespace CarpoolPickup.Controllers
             }
         }
 
-        public async Task<ActionResult<PickupCar>> MarkCarLeft([FromBody]PickupCar carObj){
-            PickupCar? car = _context.PickupCars.Include(s => s.Students).Where( car => car.Id == carObj.Id).First();
+        public async Task<ActionResult<PickupCar>> MarkCarLeft([FromBody] PickupCar carObj)
+        {
+            PickupCar? car = _context.PickupCars.Include(s => s.Students).Where(car => car.Id == carObj.Id).First();
+
             if (car != null)
             {
-                car.HasLeft=true;
+                car.HasLeft = true;
                 car.LeftAt = DateTime.Now;
                 _context.Update(car);
                 await _context.SaveChangesAsync();
-            }  
+            }
+
             return car;
         }
-        public async void ResetPickupCars(){
+        public async void ResetPickupCars()
+        {
             _context.RemoveRange(_context.PickupCars);
-             await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

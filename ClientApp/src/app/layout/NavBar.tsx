@@ -10,10 +10,6 @@ export default function NavBar(){
                 <i className="car icon" style={{fontSize:25}}></i>
                     Carpool
                 </MenuItem>
-                <MenuItem name="Home">
-                </MenuItem>
-                <MenuItem name="Classes">
-                </MenuItem>
             </Container>
         </Menu>
     )

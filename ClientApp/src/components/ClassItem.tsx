@@ -10,13 +10,12 @@ interface Props {
     selectedStudents: Student[],
     setSelectedStudents: (argument0: Student[]) => void
     disabledStudents: Student[],
-    validRegistrationNumber: boolean
+    validRegistrationNumber: boolean,
+    isEditCarEnabled:boolean
 }
 
-export default function ClassItem({ schoolclass, selectedStudents, setSelectedStudents, disabledStudents, validRegistrationNumber }: Props) {
+export default function ClassItem({ schoolclass, selectedStudents, setSelectedStudents, disabledStudents, validRegistrationNumber,isEditCarEnabled }: Props) {
 
-    const [totalNumberOfStudents, setTotalNumberOfStudents] = useState<number>(schoolclass.students.length);
-    const [StudentsLeft, setStudentsLeft] = useState<number>(0);
 
     function handleSelectedStudent(classid: number, studentid: number) {
 
@@ -33,6 +32,8 @@ export default function ClassItem({ schoolclass, selectedStudents, setSelectedSt
         }
     }
     function getdisabledProperty(disabledStudents: Student[], currentId: number) {
+        if(isEditCarEnabled && getcheckedProperty(selectedStudents,currentId))
+            return false;
         if (!validRegistrationNumber)
             return true;
         return disabledStudents.findIndex(student => student.id == currentId) >= 0 ? true : false;
@@ -55,18 +56,18 @@ export default function ClassItem({ schoolclass, selectedStudents, setSelectedSt
     return (
         <>
             <Header>
-                Class {schoolclass.className}
+                <span style={{color: '#1f5f93'}}>Class {schoolclass.className} </span>
                 <span className="ui" style={{float:'right'}}>
-                    {getStudentsLeft()}/{totalNumberOfStudents}
+                    {getStudentsLeft()}/{schoolclass.students.length}
                 </span>
             </Header>
             <List horizontal>
                 {schoolclass.students.map((studentobj: Student) => (
                     <ListItem key={studentobj.id}>
                         <>
-                            <input type="checkbox" disabled={getdisabledProperty(disabledStudents, studentobj.id) || !validRegistrationNumber} checked={getcheckedProperty(selectedStudents, studentobj.id)} onChange={() => { }} style={{ marginRight: 10 }} onClick={() => handleSelectedStudent(schoolclass.id, studentobj.id)} value={studentobj.id}>
+                            <input type="checkbox" disabled={getdisabledProperty(disabledStudents, studentobj.id)} checked={getcheckedProperty(selectedStudents, studentobj.id)} onChange={() => { }} style={{ marginRight: 10 }} onClick={() => handleSelectedStudent(schoolclass.id, studentobj.id)} value={studentobj.id}>
                             </input>
-                            <span>{studentobj.studentName} </span>
+                            <span style={{opacity: getdisabledProperty(disabledStudents, studentobj.id)? 0.45 : '', color: getdisabledProperty(disabledStudents, studentobj.id)? 'rgba(40, 40, 40, 0.3)': ''}}>{studentobj.studentName} </span>
                         </>
                     </ListItem>
                 ))

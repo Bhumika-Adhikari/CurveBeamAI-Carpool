@@ -17,10 +17,13 @@ export default function CarItem({ car, handleCarDeletion, handleCarEdit,handleCa
    
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     return (
-        <div className="card">
+        <div className="card" style={{opacity: disableCar? .45 : '' ,color: disableCar? 'rgba(40,40,40,.3)': ''}}>
             <div className="content">
                 <div className="header" >
                     {car.registrationNumber}
+                    <span style={{display: disableCar? '': 'none', float:'right'}}>
+                        (Left)
+                    </span>
                 </div>
                 <div className="description">
                     {
