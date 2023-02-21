@@ -11,16 +11,17 @@ interface Props {
     setDisabledStudents: (disabledStudents: Student[]) => void
     setvalidRegistrationNumber: (isvalidRegistrationNumber: boolean) => void
     validRegistrationNumber: boolean,
-    disabledStudents: Array<Student>
+    disabledStudents: Array<Student>,
+    isEditCarEnabled:boolean,
+    setEditCar: (editcar : boolean) => void
 
 }
-export default function CarpoolLane({ setSelectedStudents, selectedStudents, setDisabledStudents, setvalidRegistrationNumber, validRegistrationNumber, disabledStudents }: Props) {
+export default function CarpoolLane({ setSelectedStudents, selectedStudents, setDisabledStudents, setvalidRegistrationNumber, validRegistrationNumber,setEditCar,isEditCarEnabled,disabledStudents }: Props) {
     const baseURL: string | undefined = process.env.REACT_APP_BASE_URL;
 
     const [pickupCars, setPickupCars] = useState<PickupCar[]>([]);
     const [carRegistrationNumber, setRegistrationNumber] = useState('');
     const [pickupcarForEdit, setpickupCarforEdit] = useState<PickupCar | undefined>();
-    const [isEditCarEnabled, setEditCar] = useState<boolean>(false);
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [isSomeError, setSomeErrorFlag] = useState<boolean>(false);
@@ -127,12 +128,14 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
     }
     function handleCarEdit(cartoEdit: PickupCar) {
+        resetCarpoolDashboardValues();
         setvalidRegistrationNumber(true);
         setRegistrationNumber(cartoEdit.registrationNumber);
         setEditCar(true);
         setSelectedStudents(cartoEdit.students);
         setpickupCarforEdit(cartoEdit);
         setError('');
+        setIsCarLetError(false);
     }
 
     function handleCarLeft(car: PickupCar) {
@@ -146,7 +149,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
 
         if (error) {
             setIsCarLetError(true);
-            setError("Car Cannot be marked left, Please remove student/s who has already left");
+            //setError("Car cannot be marked left, Please remove student/s who has already left");
 
         }
         else {
@@ -159,9 +162,11 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                     setPickupCars(array);
                     disabledStudentsOld.push(...response.data.students);
                     setDisabledStudents(disabledStudentsOld);
+                    resetCarpoolDashboardValues();
                 })
         }
     }
+
 
     function handleResetCarpool() {
         axios.post<PickupCar>(baseURL + 'PickupCar/ResetPickupCars')
@@ -184,17 +189,19 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
         <Segment>
             <Segment className="ui" >
                 <Form>
-                    <Form.Input placeholder="Enter Car Registration number" value={carRegistrationNumber} onChange={handleInputchanges}></Form.Input>
+                    <Form.Input placeholder="Add New Car Registration number" value={carRegistrationNumber} onChange={handleInputchanges}></Form.Input>
                     <div className="error" id="title-error" role="alert" style={{ color: 'indianred', display: isSomeError ? '' : 'none' }}>{error}</div>
-                    <Button style={{ display: !validRegistrationNumber ? "none" : "" }} className="ui primary button" type='submit' onClick={submitCar}>Submit</Button>
-                    <Button style={{ display: !isEditCarEnabled ? "none" : "" }} className="ui right button" onClick={() => { resetCarpoolDashboardValues() }}>Cancel</Button>
+                    <Button disabled={(!validRegistrationNumber)} style={{ display: isEditCarEnabled ? "none" : "" }} className="ui basic primary button" type='submit' onClick={submitCar}>Add Car</Button>
+                    <Button  disabled={(!validRegistrationNumber)} style={{ display: !isEditCarEnabled ? "none" : "" }} className="ui basic primary button" type='submit' onClick={submitCar}>Edit Car</Button>
+                    <Button style={{ display: !isEditCarEnabled ? "none" : "" }} className="ui basic negative right button" onClick={() => { resetCarpoolDashboardValues() }}>Cancel</Button>
                 </Form>
             </Segment>
             <Segment>
                 <div style={{ overflow: 'auto' }} className="ui cards">
                     <div className="header attached" style={{ fontWeight: 700, fontSize: '1.28571429em', marginTop: '-0.21425em', lineHeight: '1.28571429em', padding: '1em 1em', width: '100%' }}>
                         Carpool Lane
-                        <div className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none' }}>{error}</div>
+                        <span style={{display: pickupCars.length==0? '' : 'none', fontWeight:'normal' , fontSize:'12px', marginLeft:'10px'}}> (Please add cars to carpool) </span>
+                        <span className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none' }}>( Car cannot be marked left, Please remove student/s who has already left. )</span>
                         <i className="redo alternate icon right" onClick={() => setShowConfirmation(true)} style={{ color: 'rgba(0,0,0,.4)', float: 'right', cursor: 'pointer' }}></i>
                         <Confirm open={showConfirmation}
                             content='Are you sure you want to reset the carpool. This will remove all progress.'
@@ -206,7 +213,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                     </div>
                     {
                         pickupCars.map((carObj,carIndex) => (
-                                <CarItem handleCarNext={handleCarNext} key={carObj.id} index={carIndex} disableCar={carObj.hasLeft ? true : false} handleCarLeft={handleCarLeft} handleCarDeletion={handleCarDeletion} car={carObj} handleCarEdit={handleCarEdit} />
+                            <CarItem handleCarNext={handleCarNext} key={carObj.id} index={carIndex} disableCar={carObj.hasLeft ? true : false} handleCarLeft={handleCarLeft} handleCarDeletion={handleCarDeletion} car={carObj} handleCarEdit={handleCarEdit} />
                         ))
                     }
                 </div>

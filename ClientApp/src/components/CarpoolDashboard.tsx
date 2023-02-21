@@ -14,6 +14,7 @@ export default function CarpoolDashboard() {
     const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
     const [disabledStudents, setDisabledStudents] = useState<Student[]>([]);
     const [validRegistrationNumber, setvalidRegistrationNumber] = useState<boolean>(false);
+    const [isEditCarEnabled, setEditCar] = useState<boolean>(false);
 
     useEffect(() => {
         axios.get<Schoolclass[]>(baseURL + 'classes/GetClasses')
@@ -27,10 +28,10 @@ export default function CarpoolDashboard() {
             {
                 schoolClasses.map(classobj => (
                     <Segment key={classobj.id} clearing disabled={!validRegistrationNumber}>
-                        <ClassItem validRegistrationNumber={validRegistrationNumber} schoolclass={classobj} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} disabledStudents={disabledStudents} />
+                        <ClassItem isEditCarEnabled={isEditCarEnabled} validRegistrationNumber={validRegistrationNumber} schoolclass={classobj} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} disabledStudents={disabledStudents} />
                     </Segment>
                 ))}
-            <CarpoolLane validRegistrationNumber={validRegistrationNumber} setvalidRegistrationNumber={setvalidRegistrationNumber} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} setDisabledStudents={setDisabledStudents} disabledStudents={disabledStudents} />
+            <CarpoolLane setEditCar={setEditCar} isEditCarEnabled={isEditCarEnabled} validRegistrationNumber={validRegistrationNumber} setvalidRegistrationNumber={setvalidRegistrationNumber} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents} setDisabledStudents={setDisabledStudents} disabledStudents={disabledStudents} />
         </>
     )
 }
