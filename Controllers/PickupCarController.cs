@@ -90,10 +90,27 @@ namespace CarpoolPickup.Controllers
 
             return car;
         }
-        public async void ResetPickupCars()
+        public async void ClearPickupCars()
         {
             _context.RemoveRange(_context.PickupCars);
             await _context.SaveChangesAsync();
+        }
+
+         public async Task<ActionResult<List<PickupCar>>> ResetPickupCars()
+        {
+            List<PickupCar> cars = await _context.PickupCars.ToListAsync();
+            foreach(PickupCar car in cars)
+            {
+                if(car.HasLeft == true)
+                {
+                    car.HasLeft =false;
+                    car.LeftAt = DateTime.MinValue;
+                }
+                _context.Update(car);
+            }
+            await _context.SaveChangesAsync();
+
+            return await GetCars();
         }
     }
 }

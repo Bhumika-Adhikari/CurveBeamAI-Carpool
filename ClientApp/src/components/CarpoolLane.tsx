@@ -22,7 +22,8 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
     const [pickupCars, setPickupCars] = useState<PickupCar[]>([]);
     const [carRegistrationNumber, setRegistrationNumber] = useState('');
     const [pickupcarForEdit, setpickupCarforEdit] = useState<PickupCar | undefined>();
-    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+    const [showClearConfirmation, setShowClearConfirmation] = useState<boolean>(false);
+    const [showResetConfirmation, setShowResetConfirmation] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [isSomeError, setSomeErrorFlag] = useState<boolean>(false);
     const [iscarLeftError, setIsCarLetError] = useState<boolean>(false);
@@ -178,13 +179,22 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
     }
 
 
-    function handleResetCarpool() {
-        axios.post<PickupCar>(baseURL + 'PickupCar/ResetPickupCars')
+    function handleClearCarpool() {
+        axios.post<PickupCar>(baseURL + 'PickupCar/ClearPickupCars')
             .then(response => {
                 setPickupCars([]);
                 resetCarpoolDashboardValues();
                 setDisabledStudents([]);
-                setShowConfirmation(false);
+                setShowClearConfirmation(false);
+            })
+    }
+    function handleResetCarpool(){
+        axios.post<Array<PickupCar>>(baseURL + 'PickupCar/ResetPickupCars')
+            .then(response => {
+                setPickupCars(response.data);
+                resetCarpoolDashboardValues();
+                setDisabledStudents([]);
+                setShowResetConfirmation(false);
             })
     }
     function handleCarNext(index: number) {
@@ -220,13 +230,21 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                         Carpool Lane
                         <span style={{ display: pickupCars.length == 0 ? '' : 'none', fontWeight: 'normal', fontSize: '12px', marginLeft: '10px' }}> (Please add cars to carpool) </span>
                         <span className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none', marginLeft: '10 px' }}> (Car cannot be marked left, Please remove student/s who has already left. )</span>
-                        <i className="redo alternate icon right" onClick={() => setShowConfirmation(true)} style={{ color: 'rgba(0,0,0,.4)', float: 'right', cursor: 'pointer' }}></i>
-                        <Confirm open={showConfirmation}
-                            content='Are you sure you want to reset the carpool ? This will remove all progress.'
+                        <Button className="basic primary" onClick={() => setShowResetConfirmation(true)} style={{float: 'right' }}> Reset Carpool</Button>
+                        <Confirm open={showResetConfirmation}
+                            content='Are you sure you want to reset the carpool ? This will revert all left cars.'
                             cancelButton='No'
                             confirmButton="Yes, I'm sure."
-                            onCancel={() => setShowConfirmation(false)}
-                            onConfirm={handleResetCarpool}>
+                            onCancel={() => setShowResetConfirmation(false)}
+                            onConfirm={() => handleResetCarpool()}>
+                        </Confirm>
+                        <Button className="basic negative" onClick={() => setShowClearConfirmation(true)} style={{ float: 'right' }}> Clear Carpool</Button>
+                        <Confirm open={showClearConfirmation}
+                            content='Are you sure you want to clear the carpool ? This will remove all pickup cars.'
+                            cancelButton='No'
+                            confirmButton="Yes, I'm sure."
+                            onCancel={() => setShowClearConfirmation(false)}
+                            onConfirm={() => handleClearCarpool()}>
                         </Confirm>
                     </div>
                     {
