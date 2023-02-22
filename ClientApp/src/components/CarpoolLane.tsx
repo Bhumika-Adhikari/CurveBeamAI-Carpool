@@ -92,22 +92,27 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
         setIsCarLetError(false);
         var value = event.target.value;
         setRegistrationNumber(event.target.value);
-        if (value.length < 6) {
+        if(value.length == 0)
+        {
+            setSomeErrorFlag(false);
+            setError('');
+        }
+        else if (value.length < 6) {
             setvalidRegistrationNumber(false);
             setSomeErrorFlag(true);
-            setError('Registration Number should be atleast 6 characters');
+            setError('Registration number should be atleast 6 characters');
             return;
         }
         else if (Boolean(!value.match(/^[A-Za-z0-9]*$/))) {
             setvalidRegistrationNumber(false);
             setSomeErrorFlag(true);
-            setError('Registration Number should not contain special characters');
+            setError('Registration number should not contain special characters');
             return;
         }
         else if (pickupCars.findIndex(p => p.registrationNumber == value) >= 0) {
             setvalidRegistrationNumber(false);
             setSomeErrorFlag(true);
-            setError('Please enter a unique Registration Number');
+            setError('Please enter a unique registration number');
             return;
         }
         else {
@@ -217,7 +222,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                         <span className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none', marginLeft: '10 px' }}> (Car cannot be marked left, Please remove student/s who has already left. )</span>
                         <i className="redo alternate icon right" onClick={() => setShowConfirmation(true)} style={{ color: 'rgba(0,0,0,.4)', float: 'right', cursor: 'pointer' }}></i>
                         <Confirm open={showConfirmation}
-                            content='Are you sure you want to reset the carpool. This will remove all progress.'
+                            content='Are you sure you want to reset the carpool ? This will remove all progress.'
                             cancelButton='No'
                             confirmButton="Yes, I'm sure."
                             onCancel={() => setShowConfirmation(false)}

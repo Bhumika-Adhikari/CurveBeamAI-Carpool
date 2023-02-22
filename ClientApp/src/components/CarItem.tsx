@@ -44,7 +44,7 @@ export default function CarItem({ car, handleCarDeletion, handleCarEdit,handleCa
                     <i typeof="button" className="edit alternate outline` icon" onClick={() => handleCarEdit(car)} style={{ cursor: "pointer", fontSize: "1.2em" }} ></i>
                     <i typeof="button" className="trash alternate outline icon" onClick={() => setShowConfirmation(true)} style={{ cursor: "pointer", fontSize: "1.2em" }}></i>
                         <Confirm open={showConfirmation}
-                            content='Are you sure you want to delete this car?'
+                            content='Are you sure you want to delete this car ?'
                             cancelButton='No'
                             confirmButton="Yes, I'm sure."
                             onCancel={() => setShowConfirmation(false)}
