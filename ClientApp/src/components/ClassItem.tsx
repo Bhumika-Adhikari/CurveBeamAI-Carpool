@@ -59,8 +59,9 @@ export default function ClassItem({ schoolclass, selectedStudents, setSelectedSt
         <>
             <Header>
                 <span style={{ color: '#1f5f93' }}>Class {schoolclass.className} </span>
-                <span className="ui" style={{ float: 'right' }}>
-                    {getStudentsLeft()}/{schoolclass.students.length}
+                <span className="ui" style={{ float: 'right' , fontSize : '12px'}}>
+                   <span> Students Left - {getStudentsLeft()}</span>
+                   <span style={{marginLeft: '5px'}}> Students Remaining - { schoolclass.students.length - getStudentsLeft()}</span>
                 </span>
             </Header>
             <List horizontal>
