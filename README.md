@@ -35,6 +35,7 @@ Demo URL: [https://webapp-carpoolpickup.azurewebsites.net/](https://webapp-carpo
 - User also can assign/de-assign students from the vehicles as well.
 - User can clear the carpool lane to remove all cars.
 - User can reset the carpool lane to its default state where cars are not marked as left.
+- User is notified for all additions/changes made for the carpool lane.
 
 ## Publish Project to Azure Web App
 

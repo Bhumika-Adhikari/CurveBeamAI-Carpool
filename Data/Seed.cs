@@ -18,6 +18,7 @@ namespace CarpoolPickup.Data
                 new SchoolClass("A"),
                 new SchoolClass("B")
             };
+            
             List<Student> classAStudents = new List<Student>{
                 new Student("Sam"),
                 new Student("Haris"),
@@ -29,12 +30,11 @@ namespace CarpoolPickup.Data
                 new Student("Kabir"),
                 new Student("Harita"),
                 new Student("Nish")
-
             };
 
             List<Student> classBStudents = new List<Student>{
                 new Student("Bhumika"),
-                new Student("katy"),
+                new Student("Katy"),
                 new Student("Harry"),
                 new Student("Champ"),
                 new Student("Nahid"),
@@ -48,7 +48,6 @@ namespace CarpoolPickup.Data
                 new Student("Jay"),
                 new Student("Phil"),
                 new Student("Alex")
-
             };
 
             SchoolClass classA = classes.Where(obj => obj.ClassName == "A").First<SchoolClass>();

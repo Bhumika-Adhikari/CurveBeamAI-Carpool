@@ -41,7 +41,7 @@ export default function CarpoolLane({
     useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [isSomeError, setSomeErrorFlag] = useState<boolean>(false);
-  const [iscarLeftError, setIsCarLetError] = useState<boolean>(false);
+  const [iscarLeftError, setIsCarLeftError] = useState<boolean>(false);
 
   useEffect(() => {
     axios.get<PickupCar[]>(baseURL + "PickupCar/GetCars").then((response) => {
@@ -65,7 +65,7 @@ export default function CarpoolLane({
     setSelectedStudents([]);
     setEditCar(false);
     setpickupCarforEdit(undefined);
-    setIsCarLetError(false);
+    setIsCarLeftError(false);
   }
 
   function submitCar() {
@@ -109,7 +109,7 @@ export default function CarpoolLane({
   }
 
   function handleInputchanges(event: ChangeEvent<HTMLInputElement>) {
-    setIsCarLetError(false);
+    setIsCarLeftError(false);
     var value = event.target.value;
     setRegistrationNumber(event.target.value);
     if (value.length == 0) {
@@ -162,7 +162,7 @@ export default function CarpoolLane({
     setEditCar(true);
     setpickupCarforEdit(cartoEdit);
     setError("");
-    setIsCarLetError(false);
+    setIsCarLeftError(false);
     window.scrollTo(0, 0);
   }
 
@@ -176,9 +176,9 @@ export default function CarpoolLane({
     });
 
     if (error) {
-      setIsCarLetError(true);
+      setIsCarLeftError(true);
     } else {
-      setIsCarLetError(false);
+      setIsCarLeftError(false);
       axios
         .post<PickupCar>(baseURL + "PickupCar/MarkCarLeft", car)
         .then((response) => {
@@ -191,9 +191,9 @@ export default function CarpoolLane({
           setDisabledStudents(disabledStudentsOld);
           resetCarpoolDashboardValues();
           notyf.success(`Marked Pickup car ${car.registrationNumber} as Left`);
+          window.scrollTo(0, 0);
         });
     }
-    window.scrollTo(0, 0);
   }
 
   function handleClearCarpool() {
@@ -221,7 +221,7 @@ export default function CarpoolLane({
   }
 
   function handleCarNext(index: number) {
-    setIsCarLetError(false);
+    setIsCarLeftError(false);
     var array = [...pickupCars];
     var car = array[index];
     array.splice(index, 1);
