@@ -4,6 +4,13 @@ This repo contains a web application that can help students leave the classroom 
 
 Demo URL: [https://webapp-carpoolpickup.azurewebsites.net/](https://webapp-carpoolpickup.azurewebsites.net/)
 
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Running locally](#running-locally)
+- [Features](#features)
+- [Publish Project to Azure Web App](#publish-project-to-azure-web-app)
+- [Test cases](#test-cases)
+
 ## Getting started
 
 ### Prerequisites
