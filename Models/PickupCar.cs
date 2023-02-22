@@ -7,30 +7,16 @@ namespace CarpoolPickup.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
-        public string RegistrationNumber { get; set; }
-        public List<Student> Students { get; set; }
+        public string RegistrationNumber { get; set; } = default!;
+        
+        public List<Student> Students { get; set; } = default!;
 
-        public Boolean HasLeft { get; set; }
+        public Boolean HasLeft { get; set; } = default!;
 
-        public DateTime LeftAt{get;set;}
+        public DateTime LeftAt { get; set; } = default!;
 
-        public DateTime CreatedAt{get;set;} = DateTime.Now;
-
-        // public PickupCar()
-        // {
-
-        // }
-        // public PickupCar(string number)
-        // {
-        //     RegistrationNumber = number;
-        //     Students = new List<Student>();
-        // }
-
-        // public PickupCar(string number,List<>)
-        // {
-        //     RegistrationNumber = number;
-        //     Students = new List<Student>();
-        // }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

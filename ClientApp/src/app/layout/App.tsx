@@ -1,17 +1,17 @@
-import './styles.css';
-import { Container } from 'semantic-ui-react';
-import NavBar from './NavBar';
-import CarpoolDashboard from '../../components/CarpoolDashboard';
-import CarpoolLane from '../../components/CarpoolLane';
+import React, { useState } from 'react';
+import "./styles.css";
+import { Container } from "semantic-ui-react";
+import NavBar from "./NavBar";
+import CarpoolDashboard from "../../components/CarpoolDashboard";
 
 function App() {
-
+  
   return (
     <>
       <NavBar />
-      <Container style={{ marginTop: '7em' }}>
+      <Container style={{ marginTop: "7em" }}>
         <>
-        <CarpoolDashboard/>
+          <CarpoolDashboard />
         </>
       </Container>
     </>
