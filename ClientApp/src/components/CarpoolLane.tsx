@@ -230,7 +230,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                         Carpool Lane
                         <span style={{ display: pickupCars.length == 0 ? '' : 'none', fontWeight: 'normal', fontSize: '12px', marginLeft: '10px' }}> (Please add cars to carpool) </span>
                         <span className="error" id="title-error" role="alert" style={{ fontWeight: 'normal', fontSize: '12px', color: 'indianred', display: iscarLeftError ? '' : 'none', marginLeft: '10 px' }}> (Car cannot be marked left, Please remove student/s who has already left. )</span>
-                        <Button className="basic primary" onClick={() => setShowResetConfirmation(true)} style={{float: 'right' }}> Reset Carpool</Button>
+                        <Button disabled={pickupCars.length == 0} className="basic primary" onClick={() => setShowResetConfirmation(true)} style={{float: 'right' }}> Reset Carpool</Button>
                         <Confirm open={showResetConfirmation}
                             content='Are you sure you want to reset the carpool ? This will revert all left cars.'
                             cancelButton='No'
@@ -238,7 +238,7 @@ export default function CarpoolLane({ setSelectedStudents, selectedStudents, set
                             onCancel={() => setShowResetConfirmation(false)}
                             onConfirm={() => handleResetCarpool()}>
                         </Confirm>
-                        <Button className="basic negative" onClick={() => setShowClearConfirmation(true)} style={{ float: 'right' }}> Clear Carpool</Button>
+                        <Button disabled={pickupCars.length == 0} className="basic negative" onClick={() => setShowClearConfirmation(true)} style={{ float: 'right' }}> Clear Carpool</Button>
                         <Confirm open={showClearConfirmation}
                             content='Are you sure you want to clear the carpool ? This will remove all pickup cars.'
                             cancelButton='No'
