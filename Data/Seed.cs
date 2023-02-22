@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CarpoolPickup.Models;
 
 namespace CarpoolPickup.Data
@@ -22,6 +18,7 @@ namespace CarpoolPickup.Data
                 new SchoolClass("A"),
                 new SchoolClass("B")
             };
+            
             List<Student> classAStudents = new List<Student>{
                 new Student("Sam"),
                 new Student("Haris"),
@@ -33,12 +30,11 @@ namespace CarpoolPickup.Data
                 new Student("Kabir"),
                 new Student("Harita"),
                 new Student("Nish")
-
             };
 
             List<Student> classBStudents = new List<Student>{
                 new Student("Bhumika"),
-                new Student("katy"),
+                new Student("Katy"),
                 new Student("Harry"),
                 new Student("Champ"),
                 new Student("Nahid"),
@@ -52,7 +48,6 @@ namespace CarpoolPickup.Data
                 new Student("Jay"),
                 new Student("Phil"),
                 new Student("Alex")
-
             };
 
             SchoolClass classA = classes.Where(obj => obj.ClassName == "A").First<SchoolClass>();
@@ -63,37 +58,6 @@ namespace CarpoolPickup.Data
 
             await context.Classes.AddRangeAsync(classes);
             await context.SaveChangesAsync();
-
-        }
-
-        public static async Task SeedPickupCarData(ApplicationDbContext context)
-        {
-            if (context.PickupCars.Any())
-            {
-                context.RemoveRange(context.PickupCars);
-
-            }
-            await context.SaveChangesAsync();
-
-            //     List<PickupCar> _cars = new List<PickupCar>{
-            //         new PickupCar("UP63TA"),
-            //         new PickupCar("AC23Y")
-            //     };
-
-            //     await context.PickupCars.AddRangeAsync(_cars);
-            //     await context.SaveChangesAsync();
-
-            //     Student _one = context.Students.Where(obj => obj.StudentName == "Abhinav").First<Student>();
-
-            //     PickupCar _carA = context.PickupCars.Where(obj => obj.RegistrationNumber == "UP63TA").First<PickupCar>();
-            //     _carA.Students.Add(_one);
-
-            //     context.Update(_carA);
-
-            //     await context.SaveChangesAsync();
-
-
-            // }
         }
     }
 }

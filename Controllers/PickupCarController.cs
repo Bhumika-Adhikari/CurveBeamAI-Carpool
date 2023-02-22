@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CarpoolPickup.Data;
 using CarpoolPickup.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +8,7 @@ namespace CarpoolPickup.Controllers
     public class PickupCarController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+
         public PickupCarController(ApplicationDbContext context)
         {
             _context = context;
@@ -23,6 +20,7 @@ namespace CarpoolPickup.Controllers
             return await _context.PickupCars.AsNoTracking()
                         .Include(c => c.Students).OrderByDescending(c => c.CreatedAt).OrderBy(c => c.HasLeft).ToListAsync<PickupCar>();
         }
+
         [HttpPost]
         public async Task<ActionResult<PickupCar>> CreatePickupCar([FromBody] PickupCar carObj)
         {
@@ -32,11 +30,9 @@ namespace CarpoolPickup.Controllers
             return _list.First();
         }
 
+        [HttpPost]
         public async Task<ActionResult<PickupCar>> UpdatePickupCar([FromBody] PickupCar carObj)
         {
-            //List<PickupCar> cars = await _context.PickupCars.AsNoTracking().Include(c => c.Students).ToListAsync();
-            //PickupCar? car = _context.PickupCars.Find(car=> car.Id == carObj.Id);
-
             DeletePickupcar(carObj);
             carObj.Id = 0;
             foreach (Student student in carObj.Students)
@@ -44,28 +40,9 @@ namespace CarpoolPickup.Controllers
                 student.PickupCars = new List<PickupCar>();
             }
             return await CreatePickupCar(carObj);
-
-            // if (car != null)
-            // {
-            //     car.RegistrationNumber = carObj.RegistrationNumber;
-            //     foreach(Student passedStudent in carObj.Students){
-            //         if(car.Students.Find( student => passedStudent.Id == student.Id) == null)
-            //         {
-            //             car.Students.Add(passedStudent);
-            //         }
-            //     }
-            //     foreach(Student student in car.Students)
-            //     {
-            //         student.PickupCars = new List<PickupCar>();
-            //     }
-
-            //     _context.Update(car);
-            //     await _context.SaveChangesAsync();
-            //     return car;
-            // }
-            // else
-            //     return new PickupCar();
         }
+
+        [HttpPost]
         public async void DeletePickupcar([FromBody] PickupCar carObj)
         {
             PickupCar? car = _context.PickupCars.Find(carObj.Id);
@@ -76,10 +53,11 @@ namespace CarpoolPickup.Controllers
             }
         }
 
-        public async Task<ActionResult<PickupCar>> MarkCarLeft([FromBody] PickupCar carObj)
+
+        [HttpPost]
+        public async Task<ActionResult<PickupCar?>> MarkCarLeft([FromBody] PickupCar carObj)
         {
             PickupCar? car = _context.PickupCars.Include(s => s.Students).Where(car => car.Id == carObj.Id).First();
-
             if (car != null)
             {
                 car.HasLeft = true;
@@ -87,29 +65,30 @@ namespace CarpoolPickup.Controllers
                 _context.Update(car);
                 await _context.SaveChangesAsync();
             }
-
             return car;
         }
+
+        [HttpPost]
         public async void ClearPickupCars()
         {
             _context.RemoveRange(_context.PickupCars);
             await _context.SaveChangesAsync();
         }
 
-         public async Task<ActionResult<List<PickupCar>>> ResetPickupCars()
+        [HttpPost]
+        public async Task<ActionResult<List<PickupCar>>> ResetPickupCars()
         {
             List<PickupCar> cars = await _context.PickupCars.ToListAsync();
-            foreach(PickupCar car in cars)
+            foreach (PickupCar car in cars)
             {
-                if(car.HasLeft == true)
+                if (car.HasLeft == true)
                 {
-                    car.HasLeft =false;
+                    car.HasLeft = false;
                     car.LeftAt = DateTime.MinValue;
                 }
                 _context.Update(car);
             }
             await _context.SaveChangesAsync();
-
             return await GetCars();
         }
     }
